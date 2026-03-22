@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Test de Amine</title>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--bg:#07080f;--bg2:#0d0f1e;--bg3:#131629;--border:#1e2240;--border2:#2a2f5a;--cyan:#00e5c8;--amber:#f5a623;--pink:#ff4d8d;--purple:#7c6af7;--text:#eeeef8;--muted:#6b7099;--muted2:#8890c4;--glow-c:rgba(0,229,200,0.18)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 15% 10%,rgba(0,229,200,.05) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 85% 85%,rgba(124,106,247,.07) 0%,transparent 60%);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:660px;margin:0 auto;padding:0 20px 100px}
+.intro{min-height:100vh;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:40px 0;animation:fadeIn .8s ease both}
+.test-brand{font-family:'Righteous',cursive;font-size:clamp(11px,3vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.intro h1{font-family:'Righteous',cursive;font-size:clamp(36px,11vw,68px);line-height:1.0;margin-bottom:20px;background:linear-gradient(135deg,#eeeef8 0%,var(--cyan) 40%,var(--amber) 80%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.intro-sub{color:var(--muted2);font-size:16px;line-height:1.7;max-width:460px;margin:0 auto 36px}
+.intro-features{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:40px}
+.feat{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:9px 14px;font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:6px}
+.feat-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.start-btn{background:linear-gradient(135deg,var(--cyan),var(--purple));color:#07080f;font-family:'Righteous',cursive;font-size:18px;border:none;border-radius:16px;padding:18px 48px;cursor:pointer;transition:all .25s;box-shadow:0 0 40px rgba(0,229,200,.3);display:inline-flex;align-items:center;gap:10px}
+.start-btn:hover{transform:translateY(-3px);box-shadow:0 8px 50px rgba(0,229,200,.4)}
+.q-phase{display:none;padding-top:32px}
+.q-phase.active{display:block}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;position:sticky;top:0;background:var(--bg);padding:12px 0;z-index:10;border-bottom:1px solid var(--border)}
+.q-counter{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted)}
+.q-counter span{color:var(--cyan);font-weight:700}
+.ring-wrap{position:relative;width:44px;height:44px}
+.ring-wrap svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:3}
+.ring-fill{fill:none;stroke:var(--cyan);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1);filter:drop-shadow(0 0 4px var(--cyan))}
+.ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--cyan)}
+.status-text{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;max-width:160px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dim-track{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.dim-pill{font-size:10px;padding:3px 10px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border:1px solid;transition:all .4s;opacity:.3}
+.dim-pill.active{opacity:1}
+.dp-cog{color:var(--cyan);border-color:rgba(0,229,200,.3);background:rgba(0,229,200,.06)}
+.dp-soc{color:var(--amber);border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.06)}
+.dp-mot{color:var(--pink);border-color:rgba(255,77,141,.3);background:rgba(255,77,141,.06)}
+.dp-emo{color:var(--purple);border-color:rgba(124,106,247,.3);background:rgba(124,106,247,.06)}
+.dp-voc{color:#a8f57c;border-color:rgba(168,245,124,.3);background:rgba(168,245,124,.06)}
+.dp-fut{color:#f0d070;border-color:rgba(240,208,112,.3);background:rgba(240,208,112,.06)}
+.q-card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px;position:relative;overflow:hidden;animation:slideUp .35s cubic-bezier(.4,0,.2,1) both}
+.q-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.q-card.cog::before{background:linear-gradient(90deg,var(--cyan),transparent)}
+.q-card.soc::before{background:linear-gradient(90deg,var(--amber),transparent)}
+.q-card.mot::before{background:linear-gradient(90deg,var(--pink),transparent)}
+.q-card.emo::before{background:linear-gradient(90deg,var(--purple),transparent)}
+.q-card.voc::before{background:linear-gradient(90deg,#a8f57c,transparent)}
+.q-card.fut::before{background:linear-gradient(90deg,#f0d070,transparent)}
+.q-meta{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.q-cat{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;font-weight:700;padding:3px 10px;border-radius:99px}
+.cat-cog{color:var(--cyan);background:rgba(0,229,200,.1)}
+.cat-soc{color:var(--amber);background:rgba(245,166,35,.1)}
+.cat-mot{color:var(--pink);background:rgba(255,77,141,.1)}
+.cat-emo{color:var(--purple);background:rgba(124,106,247,.1)}
+.cat-voc{color:#a8f57c;background:rgba(168,245,124,.1)}
+.cat-fut{color:#f0d070;background:rgba(240,208,112,.1)}
+.q-emoji{font-size:22px}
+.q-text{font-family:'Nunito',sans-serif;font-size:clamp(17px,4.5vw,21px);font-weight:800;line-height:1.35;color:var(--text);margin-bottom:22px}
+.options{display:flex;flex-direction:column;gap:9px}
+.opt{background:var(--bg3);border:1.5px solid var(--border);border-radius:13px;padding:13px 18px;cursor:pointer;display:flex;align-items:center;gap:12px;font-size:14px;color:var(--text);text-align:left;width:100%;transition:all .18s ease}
+.opt:hover{border-color:var(--border2);transform:translateX(4px)}
+.opt.selected{border-color:var(--cyan);background:rgba(0,229,200,.08);box-shadow:0 0 20px rgba(0,229,200,.12)}
+.opt.nose{color:var(--muted);font-style:italic;border-style:dashed}
+.opt.nose:hover{border-color:var(--muted2)}
+.opt.nose.selected{border-color:var(--muted2);background:rgba(107,112,153,.1);border-style:dashed}
+.opt-icon{font-size:18px;flex-shrink:0;width:26px;text-align:center}
+.opt-label{flex:1}
+.opt-check{width:18px;height:18px;border:1.5px solid var(--border2);border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s}
+.opt.selected .opt-check{background:var(--cyan);border-color:var(--cyan);color:#07080f;font-weight:900}
+.scale-row{display:flex;gap:7px;margin-bottom:8px}
+.sc-btn{flex:1;background:var(--bg3);border:1.5px solid var(--border);border-radius:11px;padding:13px 4px;cursor:pointer;text-align:center;font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:var(--muted);transition:all .18s}
+.sc-btn:hover{border-color:var(--border2);color:var(--text)}
+.sc-btn.selected{background:linear-gradient(135deg,var(--cyan),var(--purple));border-color:transparent;color:#07080f;box-shadow:0 4px 20px var(--glow-c)}
+.sc-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:12px}
+.sc-nose{background:var(--bg3);border:1.5px dashed var(--border);border-radius:11px;padding:10px;cursor:pointer;text-align:center;font-size:13px;color:var(--muted);font-style:italic;transition:all .18s;margin-top:4px}
+.sc-nose:hover{border-color:var(--muted2);color:var(--muted2)}
+.sc-nose.selected{border-color:var(--muted2);background:rgba(107,112,153,.1);color:var(--muted2)}
+.nav{display:flex;gap:10px;margin-top:20px}
+.btn-next{flex:1;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#07080f;font-family:'Righteous',cursive;font-size:15px;border:none;border-radius:13px;padding:15px;cursor:pointer;transition:all .2s;box-shadow:0 4px 24px rgba(0,229,200,.2);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,229,200,.3)}
+.btn-next:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.btn-back{background:var(--bg3);border:1.5px solid var(--border);color:var(--muted);border-radius:13px;padding:15px 18px;cursor:pointer;font-size:18px;transition:all .2s}
+.btn-back:hover{color:var(--text);border-color:var(--border2)}
+.processing{display:none;padding-top:60px;text-align:center}
+.processing.active{display:block;animation:fadeIn .5s ease both}
+.pulse-ring{width:72px;height:72px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--cyan);animation:spin .7s linear infinite;margin:0 auto 24px;position:relative}
+.pulse-ring::after{content:'🧠';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;animation:counterSpin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes counterSpin{to{transform:rotate(-360deg)}}
+.proc-title{font-family:'Righteous',cursive;font-size:22px;color:var(--text);margin-bottom:8px}
+.proc-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+.proc-log{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);line-height:2;text-align:left;max-width:360px;margin:0 auto}
+.proc-log-line{display:flex;align-items:center;gap:8px;opacity:0;animation:fadeIn .4s ease both}
+.log-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);flex-shrink:0}
+.complete-screen{display:none;padding:40px 0;text-align:center;animation:fadeIn .8s ease both}
+.complete-screen.active{display:block}
+.complete-emoji{font-size:64px;display:block;margin-bottom:16px;animation:bounceIn .8s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes bounceIn{0%{transform:scale(.3);opacity:0}50%{transform:scale(1.1)}70%{transform:scale(.95)}100%{transform:scale(1);opacity:1}}
+.complete-h1{font-family:'Righteous',cursive;font-size:clamp(28px,8vw,44px);background:linear-gradient(135deg,var(--text),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.complete-sub{color:var(--muted2);font-size:15px;line-height:1.7;max-width:420px;margin:0 auto}
+.instruction-box{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:24px;margin:28px 0;text-align:left}
+.instr-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.instr-step:last-child{margin-bottom:0}
+.step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#07080f;font-family:'Righteous',cursive;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:14px;color:var(--muted2);line-height:1.6}
+.step-text strong{color:var(--text)}
+.code-section{background:var(--bg2);border:1px solid rgba(0,229,200,.25);border-radius:18px;padding:24px;margin:20px 0}
+.code-label{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--cyan);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.code-label::after{content:'';flex:1;height:1px;background:rgba(0,229,200,.2)}
+.qr-wrapper{display:flex;justify-content:center;margin-bottom:20px}
+#qrcode{background:white;padding:12px;border-radius:12px;display:inline-block}
+.text-code-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px}
+.text-code{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cyan);word-break:break-all;line-height:1.8;text-align:left;max-height:120px;overflow-y:auto;scrollbar-width:thin}
+.copy-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#07080f;font-family:'Righteous',cursive;font-size:14px;border:none;border-radius:11px;padding:12px;cursor:pointer;width:100%;margin-top:12px;transition:all .2s}
+.copy-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--glow-c)}
+.copy-btn.copied{background:linear-gradient(135deg,#a8f57c,var(--cyan))}
+.privacy-note{background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.2);border-radius:13px;padding:16px;margin-top:20px;font-size:13px;color:var(--amber);line-height:1.6;text-align:left}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@media(max-width:500px){.scale-row{gap:5px}.sc-btn{font-size:14px;padding:11px 2px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="intro" id="introScreen">
+  <div>
+    <div class="test-brand">Test Vocacional Oficial</div>
+    <h1>El Test<br>de Amine</h1>
+    <p class="intro-sub">Responde con honestidad — no hay respuestas buenas ni malas.<br>Si no sabes algo, elige <em>"No sé"</em>. Tómate tu tiempo.</p>
+    <div class="intro-features">
+      <div class="feat"><span class="feat-dot" style="background:var(--cyan)"></span>50 preguntas</div>
+      <div class="feat"><span class="feat-dot" style="background:var(--amber)"></span>~15 minutos</div>
+      <div class="feat"><span class="feat-dot" style="background:var(--pink)"></span>Siempre opción "No sé"</div>
+      <div class="feat"><span class="feat-dot" style="background:var(--purple)"></span>Sin respuestas incorrectas</div>
+    </div>
+    <button class="start-btn" onclick="startTest()">Empezar →</button>
+  </div>
+</div>
+
+<div class="q-phase" id="qPhase">
+  <div class="topbar">
+    <div class="q-counter">Pregunta <span id="qNum">1</span> / 50</div>
+    <div class="ring-wrap">
+      <svg viewBox="0 0 44 44" width="44" height="44">
+        <circle class="ring-bg" cx="22" cy="22" r="18"/>
+        <circle class="ring-fill" id="ringFill" cx="22" cy="22" r="18" stroke-dasharray="113" stroke-dashoffset="113"/>
+      </svg>
+      <div class="ring-num" id="ringNum">0%</div>
+    </div>
+    <div class="status-text" id="statusText">Empezando...</div>
+  </div>
+  <div class="dim-track">
+    <span class="dim-pill dp-cog" id="dp-cog">🔷 Cognitivo</span>
+    <span class="dim-pill dp-soc" id="dp-soc">🟡 Social</span>
+    <span class="dim-pill dp-mot" id="dp-mot">🔴 Motivación</span>
+    <span class="dim-pill dp-emo" id="dp-emo">🟣 Emocional</span>
+    <span class="dim-pill dp-voc" id="dp-voc">🟢 Vocacional</span>
+    <span class="dim-pill dp-fut" id="dp-fut">🌟 Futuro</span>
+  </div>
+  <div id="qContent"></div>
+</div>
+
+<div class="processing" id="processingScreen">
+  <div class="pulse-ring"></div>
+  <div class="proc-title">Analizando tu perfil...</div>
+  <div class="proc-sub">La IA está procesando tus 50 respuestas</div>
+  <div class="proc-log" id="procLog"></div>
+</div>
+
+<div class="complete-screen" id="completeScreen">
+  <span class="complete-emoji">✅</span>
+  <h1 class="complete-h1">¡Bien hecho, Amine!</h1>
+  <p class="complete-sub">Has completado el test. Sigue estos pasos para que podamos ver juntos los resultados.</p>
+  <div class="instruction-box">
+    <div class="instr-step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>Haz una captura de pantalla</strong> de esta página — que se vea el código QR y el código de texto</div>
+    </div>
+    <div class="instr-step">
+      <div class="step-num">2</div>
+      <div class="step-text"><strong>Mándala por WhatsApp</strong> a quien te envió este test</div>
+    </div>
+    <div class="instr-step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>¡Listo!</strong> Podrán ver un análisis completo y orientarte mejor</div>
+    </div>
+  </div>
+  <div class="code-section">
+    <div class="code-label">📊 Tu código de resultados</div>
+    <div class="qr-wrapper"><div id="qrcode"></div></div>
+    <div class="text-code-wrap"><div class="text-code" id="textCode">Generando...</div></div>
+    <button class="copy-btn" id="copyBtn" onclick="copyCode()">📋 Copiar código (por si acaso)</button>
+  </div>
+  <div class="privacy-note">⚠️ <strong>Este código no muestra nada aquí</strong> — solo sirve para que la persona que te envió el test pueda ver tu perfil. Tus respuestas están cifradas.</div>
+</div>
+
+</div>
+<script>
+const QS = [
+  {id:1,dim:'cog',cat:'Atención',emoji:'🎯',type:'scale',text:'¿Qué tal aguantas la atención cuando algo no te interesa?',sl:'Fatal, me pierdo enseguida',sr:'Bien, aguanto sin problema'},
+  {id:2,dim:'cog',cat:'Aprendizaje',emoji:'📚',type:'single',text:'¿Cómo aprendes mejor las cosas nuevas?',opts:['Viendo vídeos o imágenes 🎬','Leyendo y tomando notas 📝','Escuchando a alguien explicarlo 🗣️','Practicándolo directamente con las manos 🔧','No sé / Paso 🤷']},
+  {id:3,dim:'cog',cat:'Organización',emoji:'📋',type:'scale',text:'¿Te cuesta organizarte el día a día?',sl:'Para nada, lo controlo',sr:'Soy un desastre total'},
+  {id:4,dim:'cog',cat:'Concentración',emoji:'💭',type:'single',text:'Cuando intentas estudiar, ¿qué pasa?',opts:['Me concentro bien si hay silencio','Me distraigo con cualquier cosa','Necesito música o ruido de fondo','Solo si el tema me gusta de verdad','No sé / Paso 🤷']},
+  {id:5,dim:'cog',cat:'Memoria',emoji:'🧩',type:'scale',text:'¿Qué tal se te da recordar lo que has estudiado?',sl:'Se me olvida casi todo',sr:'Recuerdo bien'},
+  {id:6,dim:'cog',cat:'Tareas',emoji:'⏰',type:'single',text:'¿Qué haces normalmente con las tareas?',opts:['Las hago el mismo día','Las dejo para el último momento','Las hago a medias y las abandono','No las hago casi nunca','No sé / Paso 🤷']},
+  {id:7,dim:'cog',cat:'Planificación',emoji:'🗓️',type:'scale',text:'¿Te cuesta calcular el tiempo que necesitas para algo?',sl:'Nunca me pasa',sr:'Siempre lo calculo mal'},
+  {id:8,dim:'cog',cat:'Pensamiento',emoji:'🔄',type:'single',text:'Cuando tienes un problema, ¿qué haces?',opts:['Pienso mucho antes de actuar','Actúo directamente y ya veré','Pido consejo a alguien','Me bloqueo y lo dejo','No sé / Paso 🤷']},
+  {id:9,dim:'cog',cat:'Multitarea',emoji:'🎪',type:'scale',text:'¿Puedes hacer varias cosas a la vez?',sl:'No, me lío',sr:'Sí, sin problema'},
+  {id:10,dim:'cog',cat:'Lectura',emoji:'📖',type:'single',text:'¿Qué pasa cuando tienes que leer algo largo?',opts:['Lo leo entero sin problema','Me pierdo a la mitad','Leo el principio y el final','No leo si puedo evitarlo','No sé / Paso 🤷']},
+  {id:11,dim:'emo',cat:'Autoestima',emoji:'🪞',type:'scale',text:'¿Cuánto confías en ti mismo en general?',sl:'Poco, casi nada',sr:'Mucho, me siento capaz'},
+  {id:12,dim:'emo',cat:'Frustración',emoji:'😤',type:'single',text:'Cuando algo no te sale bien, ¿cómo reaccionas?',opts:['Me frustro pero lo intento de nuevo','Lo dejo y paso a otra cosa','Me enfado mucho conmigo mismo','Me da igual, paso página rápido','No sé / Paso 🤷']},
+  {id:13,dim:'emo',cat:'Presión',emoji:'😰',type:'scale',text:'¿Te agobias con los exámenes o fechas límite?',sl:'Nunca me agobio',sr:'Me agobio muchísimo'},
+  {id:14,dim:'emo',cat:'Emociones',emoji:'💬',type:'single',text:'Cuando algo te molesta mucho, ¿qué haces?',opts:['Lo digo claramente y ya','Me lo guardo y exploto luego','Me lo guardo y no exploto nunca','Se me olvida rápido sin más','No sé / Paso 🤷']},
+  {id:15,dim:'emo',cat:'Críticas',emoji:'🎯',type:'scale',text:'¿Cómo llevas que te critiquen o corrijan?',sl:'Muy mal, me afecta mucho',sr:'Bien, lo uso para mejorar'},
+  {id:16,dim:'emo',cat:'Estado de ánimo',emoji:'🌡️',type:'single',text:'¿Cómo describirías tu estado de ánimo en general?',opts:['Bastante estable la mayoría del tiempo','Sube y baja mucho, muy variable','Más hacia abajo que arriba normalmente','Depende mucho del día y la situación','No sé / Paso 🤷']},
+  {id:17,dim:'emo',cat:'Estrés',emoji:'🌀',type:'scale',text:'¿Te estresa tomar decisiones importantes?',sl:'Nada en absoluto',sr:'Muchísimo, me paraliza'},
+  {id:18,dim:'emo',cat:'Apoyo emocional',emoji:'🤗',type:'single',text:'Cuando estás mal, ¿qué haces normalmente?',opts:['Hablo con alguien de confianza','Me aíslo y lo proceso solo','Busco distracción (redes, juegos, música)','Me quedo bloqueado sin hacer nada','No sé / Paso 🤷']},
+  {id:19,dim:'emo',cat:'Desmotivación',emoji:'🔋',type:'scale',text:'¿Con qué frecuencia sientes que nada te motiva?',sl:'Casi nunca me pasa',sr:'Casi siempre me siento así'},
+  {id:20,dim:'emo',cat:'Autoconocimiento',emoji:'🧠',type:'single',text:'¿Crees que te conoces bien a ti mismo?',opts:['Sí, sé lo que quiero y cómo soy','Más o menos, me conozco a medias','No mucho, me resulto raro a veces','Para nada, soy un misterio para mí','No sé / Paso 🤷']},
+  {id:21,dim:'soc',cat:'Solo o acompañado',emoji:'👥',type:'single',text:'¿Prefieres estar solo o con gente?',opts:['Solo siempre, me recargo solo','Con gente, me aburro solo','Depende del plan y las personas','Me da igual cualquiera','No sé / Paso 🤷']},
+  {id:22,dim:'soc',cat:'Amigos',emoji:'🤝',type:'scale',text:'¿Tienes amigos cercanos con los que cuentes de verdad?',sl:'No, estoy bastante solo',sr:'Sí, tengo personas de confianza'},
+  {id:23,dim:'soc',cat:'Rol en grupo',emoji:'🎭',type:'single',text:'En un grupo, ¿qué papel sueles tener?',opts:['El que propone y lidera','El que sigue la corriente','El gracioso o el que anima','El que observa y escucha','No sé / Paso 🤷']},
+  {id:24,dim:'soc',cat:'Conflictos',emoji:'⚡',type:'scale',text:'¿Te cuesta enfrentarte a alguien cuando hay un problema?',sl:'Nada, lo digo sin problema',sr:'Muchísimo, lo evito siempre'},
+  {id:25,dim:'soc',cat:'Familia',emoji:'🏠',type:'single',text:'¿Cómo es el ambiente en casa?',opts:['Bueno, hay buen rollo general','Normal, ni bien ni mal','Hay tensión o conflictos frecuentes','Cada uno va totalmente a lo suyo','No sé / Paso 🤷']},
+  {id:26,dim:'soc',cat:'Comunicación',emoji:'🗣️',type:'scale',text:'¿Se te da bien expresar lo que piensas o sientes?',sl:'Fatal, no encuentro las palabras',sr:'Genial, me expreso bien siempre'},
+  {id:27,dim:'soc',cat:'Redes sociales',emoji:'📱',type:'single',text:'¿Qué relación tienes con las redes sociales?',opts:['Las uso mucho, es mi zona de confort','Las uso normal, sin obsesión','Paso de ellas, prefiero el mundo real','Las uso pero a veces me generan ansiedad','No sé / Paso 🤷']},
+  {id:28,dim:'soc',cat:'Trabajo en equipo',emoji:'⚙️',type:'scale',text:'¿Te gusta trabajar en equipo con otros?',sl:'Para nada, prefiero solo',sr:'Me encanta colaborar'},
+  {id:29,dim:'mot',cat:'Tiempo libre',emoji:'❤️',type:'single',text:'¿Qué es lo que más te gusta hacer en tu tiempo libre?',opts:['Videojuegos / tecnología 🎮','Deportes / actividad física 🏃','Música / arte / creatividad 🎨','Salir con amigos o planes sociales 🎉','No sé / Paso 🤷']},
+  {id:30,dim:'mot',cat:'Motivación laboral',emoji:'🚀',type:'single',text:'¿Qué te haría tener ganas de ir a trabajar?',opts:['Que el tema me apasione de verdad','Que vea para qué sirve en la vida real','Que haya buen ambiente con la gente','Que pague bien o tenga buen futuro','No sé / Paso 🤷']},
+  {id:31,dim:'mot',cat:'Energía',emoji:'⚡',type:'scale',text:'¿Cuánta energía tienes normalmente para hacer cosas?',sl:'Muy poca, siempre agotado',sr:'Mucha, siempre activo'},
+  {id:32,dim:'mot',cat:'Persistencia',emoji:'💪',type:'single',text:'Cuando algo se complica mucho, ¿qué haces?',opts:['Insisto hasta conseguirlo','Busco una forma más fácil','Lo dejo y busco otra cosa','Pido ayuda a alguien','No sé / Paso 🤷']},
+  {id:33,dim:'mot',cat:'Metas',emoji:'🎯',type:'scale',text:'¿Tienes claro lo que quieres en la vida?',sl:'Para nada, perdido total',sr:'Tengo mis metas muy claras'},
+  {id:34,dim:'mot',cat:'Dinero vs pasión',emoji:'⚖️',type:'single',text:'¿Qué priorizarías en un trabajo?',opts:['Que me guste y me apasione','Que pague bien aunque no me guste','Que tenga estabilidad y seguridad','Que me dé libertad y tiempo libre','No sé / Paso 🤷']},
+  {id:35,dim:'mot',cat:'Rutina',emoji:'🔁',type:'scale',text:'¿Puedes aguantar hacer lo mismo todos los días?',sl:'No, me muero de aburrimiento',sr:'Sí, la rutina me da seguridad'},
+  {id:36,dim:'mot',cat:'Curiosidad',emoji:'🔍',type:'single',text:'¿Te pica la curiosidad por aprender cosas nuevas?',opts:['Sí, siempre quiero saber más','Solo cuando me interesa el tema','Rara vez, prefiero lo que ya sé','No especialmente','No sé / Paso 🤷']},
+  {id:37,dim:'voc',cat:'Trabajo físico',emoji:'🔧',type:'scale',text:'¿Te ves bien trabajando con las manos o en movimiento?',sl:'Para nada',sr:'Me encantaría hacerlo'},
+  {id:38,dim:'voc',cat:'Tecnología',emoji:'💻',type:'single',text:'¿Qué relación tienes con la tecnología?',opts:['Me flipa, podría pasarme el día 💻','La uso normal pero no me obsesiona','La uso lo justo para lo básico','No me va nada la tecnología','No sé / Paso 🤷']},
+  {id:39,dim:'voc',cat:'Ayudar personas',emoji:'🧑‍⚕️',type:'scale',text:'¿Te gusta ayudar, cuidar o enseñar a otras personas?',sl:'No es lo mío en absoluto',sr:'Me llena mucho hacerlo'},
+  {id:40,dim:'voc',cat:'Creatividad',emoji:'🎨',type:'single',text:'¿Tienes vena creativa o artística?',opts:['Sí, me encanta crear cosas','Un poco, pero no es mi fuerte','No especialmente','Para nada, soy más de datos','No sé / Paso 🤷']},
+  {id:41,dim:'voc',cat:'Números',emoji:'🔢',type:'scale',text:'¿Qué tal se te dan los números y el análisis?',sl:'Fatal, los odio',sr:'Se me dan muy bien'},
+  {id:42,dim:'voc',cat:'Asignaturas',emoji:'📐',type:'single',text:'¿En qué tipo de asignaturas te ha ido mejor?',opts:['Ciencias y matemáticas','Letras, historia, idiomas','Tecnología o informática','Plástica, música, artes','No sé / Paso 🤷']},
+  {id:43,dim:'voc',cat:'Naturaleza',emoji:'🌿',type:'scale',text:'¿Te gustaría trabajar con animales, naturaleza o al aire libre?',sl:'No, prefiero trabajar en interior',sr:'Sí, me encantaría'},
+  {id:44,dim:'voc',cat:'Emprender',emoji:'💡',type:'single',text:'¿Has pensado en montar tu propio negocio alguna vez?',opts:['Sí, es uno de mis sueños','Lo he pensado pero me da miedo','No me lo había planteado','No, prefiero trabajar para alguien','No sé / Paso 🤷']},
+  {id:45,dim:'fut',cat:'Visión de futuro',emoji:'🔭',type:'single',text:'¿Cómo te ves dentro de 10 años?',opts:['Trabajando en algo que me apasione','Con estabilidad económica y tranquilidad','Viajando o viviendo experiencias únicas','No lo sé, vivo el presente','No sé / Paso 🤷']},
+  {id:46,dim:'fut',cat:'Estudios',emoji:'🎓',type:'scale',text:'¿Estás dispuesto a estudiar más años para conseguir lo que quieres?',sl:'No, quiero trabajar ya',sr:'Sí, lo que haga falta'},
+  {id:47,dim:'fut',cat:'Entorno laboral',emoji:'🏢',type:'single',text:'¿Dónde te imaginas trabajando?',opts:['En una oficina con ordenador 💻','En un taller, obra o espacio físico 🔨','Con personas (hospital, cole, tienda) 🧑‍⚕️','Desde casa o de forma flexible 🏠','No sé / Paso 🤷']},
+  {id:48,dim:'fut',cat:'Urgencia económica',emoji:'🗝️',type:'scale',text:'¿Qué tan urgente es para ti ser independiente económicamente?',sl:'No me urge nada',sr:'Es urgente, lo necesito ya'},
+  {id:49,dim:'fut',cat:'Miedo al futuro',emoji:'😟',type:'single',text:'¿Qué es lo que más te preocupa del futuro?',opts:['No encontrar trabajo','Elegir mal y arrepentirme','No ganar suficiente dinero','La soledad o perder a mi gente','No sé / Paso 🤷']},
+  {id:50,dim:'fut',cat:'Sueño de vida',emoji:'✨',type:'single',text:'Si pudieras hacer UNA sola cosa el resto de tu vida, ¿cuál sería?',opts:['Crear cosas (diseño, arte, música, código) 🎨','Ayudar a personas (salud, educación, social) ❤️','Trabajar con datos, lógica o tecnología 🧮','Trabajar con mis manos o al aire libre 🌿','No sé / Paso 🤷']}
+];
+
+let idx = 0;
+let ans = {};
+
+function startTest() {
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('qPhase').classList.add('active');
+  renderQ();
+}
+
+function renderQ() {
+  const q = QS[idx];
+  const pct = Math.round((idx / QS.length) * 100);
+  document.getElementById('qNum').textContent = idx + 1;
+  document.getElementById('ringNum').textContent = pct + '%';
+  document.getElementById('ringFill').style.strokeDashoffset = 113 - (113 * pct / 100);
+  document.getElementById('statusText').textContent = q.cat;
+  document.querySelectorAll('.dim-pill').forEach(p => p.classList.remove('active'));
+  const pill = document.getElementById('dp-' + q.dim);
+  if (pill) pill.classList.add('active');
+
+  const saved = ans[q.id];
+  let body = '';
+  if (q.type === 'scale') {
+    body = `<div class="scale-row">${[1,2,3,4,5].map(n=>`<button class="sc-btn${saved==n?' selected':''}" onclick="sS(${q.id},${n})">${n}</button>`).join('')}</div><div class="sc-labels"><span>${q.sl}</span><span>${q.sr}</span></div><button class="sc-nose${saved==='ns'?' selected':''}" onclick="sN(${q.id})">🤷 No sé / Paso</button>`;
+  } else {
+    const icons = ['💡','⚡','🎯','🔥','🌟','🔧','💬','🎨','🚀'];
+    body = `<div class="options">${(q.opts||[]).map((o,i)=>{
+      const nose = o.includes('No sé') || o.includes('Paso');
+      const sel = saved===o;
+      return `<button class="opt${nose?' nose':''}${sel?' selected':''}" onclick="sO(${q.id},${i})"><span class="opt-icon">${nose?'🤷':icons[i]||'○'}</span><span class="opt-label">${o}</span><span class="opt-check">${sel?'✓':''}</span></button>`;
+    }).join('')}</div>`;
+  }
+
+  const isLast = idx === QS.length - 1;
+  const hasAns = saved !== undefined;
+  document.getElementById('qContent').innerHTML = `
+    <div class="q-card ${q.dim}">
+      <div class="q-meta"><span class="q-emoji">${q.emoji}</span><span class="q-cat cat-${q.dim}">${q.cat}</span></div>
+      <div class="q-text">${q.text}</div>
+      ${body}
+    </div>
+    <div class="nav">
+      ${idx > 0 ? '<button class="btn-back" onclick="goBack()">←</button>' : ''}
+      <button class="btn-next" id="btnNext" onclick="goNext()" ${!hasAns?'disabled':''}>
+        ${isLast ? '✅ Finalizar test' : 'Siguiente →'}
+      </button>
+    </div>`;
+}
+
+function sO(qid, i) { ans[qid] = QS[qid-1].opts[i]; renderQ(); }
+function sS(qid, v) { ans[qid] = v; renderQ(); }
+function sN(qid) { ans[qid] = 'ns'; renderQ(); }
+
+function goNext() {
+  if (ans[QS[idx].id] === undefined) return;
+  if (idx < QS.length - 1) { idx++; renderQ(); window.scrollTo(0,0); }
+  else finishTest();
+}
+function goBack() {
+  if (idx > 0) { idx--; renderQ(); window.scrollTo(0,0); }
+}
+
+function finishTest() {
+  document.getElementById('qPhase').classList.remove('active');
+  document.getElementById('processingScreen').classList.add('active');
+  window.scrollTo(0,0);
+  const logs = ['Leyendo tus 50 respuestas...','Calculando perfil cognitivo...','Analizando dimensión emocional...','Evaluando intereses vocacionales...','Construyendo predicción de futuro...','Generando código de resultados...'];
+  const logEl = document.getElementById('procLog');
+  logs.forEach((l,i) => {
+    setTimeout(() => {
+      const d = document.createElement('div');
+      d.className = 'proc-log-line'; d.style.animationDelay = '0s';
+      d.innerHTML = `<div class="log-dot"></div>${l}`;
+      logEl.appendChild(d);
+    }, i * 600);
+  });
+  setTimeout(generateCode, logs.length * 600 + 800);
+}
+
+async function generateCode() {
+  const history = QS.map(q => {
+    const a = ans[q.id];
+    let at = a === undefined ? 'Sin responder' : a === 'ns' ? 'No sé / Paso' : q.type === 'scale' ? `${a}/5 (1=${q.sl} · 5=${q.sr})` : a;
+    return { question: q.text, answer: at, dimension: q.cat, dim: q.dim };
+  });
+
+  const histText = history.map((h,i) => `${i+1}. [${h.dimension}] ${h.question}\n   → ${h.answer}`).join('\n');
+  let analysis = null;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:3000,
+        messages:[{role:'user',content:`Eres psicólogo vocacional experto. Analiza estas respuestas de un joven español (posible TDAH) y genera informe completo.\n\nRESPUESTAS:\n${histText}\n\nDevuelve SOLO JSON válido sin markdown:\n{"nombre_perfil":"...","perfil_psicologico":"4-5 frases honestas","estilo_cognitivo":"2-3 frases","marcadores_tdah":"2-3 frases","tipo_personalidad":{"codigo":"XXXX","nombre":"...","descripcion":"2 frases"},"riasec":{"R":{"score":0,"label":"Realista"},"I":{"score":0,"label":"Investigador"},"A":{"score":0,"label":"Artístico"},"S":{"score":0,"label":"Social"},"E":{"score":0,"label":"Emprendedor"},"C":{"score":0,"label":"Convencional"}},"fortalezas":["..."],"areas_mejora":["..."],"fp_recomendadas":[{"nombre":"...","familia":"...","grado":"Grado Medio o Superior","emoji":"...","match":0,"por_que":"3 frases","salidas":["..."],"riesgo":"1 frase"}],"prediccion_futuro":[{"año":"1-2 años","texto":"..."},{"año":"5 años","texto":"..."},{"año":"10 años","texto":"..."}],"advertencias":["..."],"consejo_directo":"párrafo honesto"}\n\nIncluye 3-4 FPs. Sé específico.`}]
+      })
+    });
+    const data = await res.json();
+    const raw = (data.content||[]).map(i=>i.text||'').join('');
+    analysis = JSON.parse(raw.replace(/```json|```/g,'').trim());
+  } catch(e) {
+    analysis = { api_error: e.message };
+  }
+
+  const payload = { v:3, ts:new Date().toISOString(), total_q:50, history, analysis };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+  const code = 'TAMINE3:' + encoded;
+
+  document.getElementById('processingScreen').classList.remove('active');
+  document.getElementById('completeScreen').classList.add('active');
+  document.getElementById('textCode').textContent = code;
+  window.scrollTo(0,0);
+
+  try {
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+      text: code.length <= 2800 ? code : 'TAMINE3_LARGO:usa_el_texto_abajo',
+      width:200, height:200, colorDark:'#000000', colorLight:'#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  } catch(e) {
+    document.getElementById('qrcode').innerHTML = '<p style="color:#6b7099;font-size:12px;padding:12px">Usa el código de texto</p>';
+  }
+}
+
+function copyCode() {
+  const code = document.getElementById('textCode').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ ¡Copiado!'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.innerHTML='📋 Copiar código (por si acaso)'; btn.classList.remove('copied'); }, 2500);
+  }).catch(()=>{
+    const el=document.getElementById('textCode');
+    const r=document.createRange(); r.selectNode(el);
+    window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+  });
+}
+</script>
+</body>
+</html>
